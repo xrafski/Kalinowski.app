@@ -11,9 +11,9 @@ require('./Utils/process')(app);
 
 // Importing routes
 const blacklistRoute = require('./Routes/blacklist');
-const homeRoute = require('./Routes/home');
+const authRoute = require('./Routes/auth');
 
-app.use('/', homeRoute);
+app.use('/', authRoute);
 app.use('/blacklist', blacklistRoute);
 
 // Connect to MongoDB and start app

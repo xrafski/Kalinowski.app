@@ -3,6 +3,9 @@ const { userModel } = require('../Schemas/user');
 const { registerValidation, loginValidation } = require('../Utils/validation');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { jtwSecret } = require('../Settings/secret/info.json'); // Secret file
+
 
 // router domain/
 
@@ -51,7 +54,11 @@ router.post('/login', async (req, res) => {
     const validPassword = bcrypt.compareSync(req.body.password, dbUser.password);
     if (!validPassword) return res.status(400).send('Invalid password.');
 
-    res.status(200).send('Logged in');
+    // Create and assign json web token.
+    const token = jwt.sign({ _id: dbUser._id }, jtwSecret);
+    res.header('kali-token', token).send(token);
+
+    // res.status(200).send('Logged in');
 });
 
 module.exports = router;

@@ -4,9 +4,15 @@ const router = express.Router();
 // router domain/
 
 router.get('/', async (req, res) => {
-    console.log(req.body);
+    res.status(200).send('Home route');
+});
 
-    res.status(200).send('Hellow o.o');
+router.get('/register', async (req, res) => {
+    res.status(200).send('Home register route');
+});
+
+router.get('/login', async (req, res) => {
+    res.status(200).send('Home login route');
 });
 
 module.exports = router;

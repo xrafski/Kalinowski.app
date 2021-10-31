@@ -1,26 +1,40 @@
-// const fs = require('fs');
-const http = require('http');
-// const https = require('https');
-// const privateKey = fs.readFileSync('sslcert/server.key', 'utf8');
-// const certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
-
-// const credentials = { key: privateKey, cert: certificate };
 const express = require('express');
+const mongoose = require('mongoose');
+const { mongoURI, port } = require('./Settings/secret/info.json'); // Secret file
+
 const app = express();
+app.use(express.json());
+
+// Load some info about mongoDB connection
+require('./Utils/mongodb')(app);
+require('./Utils/process')(app);
 
 // Importing routes
+const blacklistRoute = require('./Routes/blacklist');
 const homeRoute = require('./Routes/home');
+
 app.use('/', homeRoute);
+app.use('/blacklist', blacklistRoute);
 
+// Connect to MongoDB and start app
+mongoose.connect(mongoURI, {
+    maxPoolSize: 10,
+    keepAlive: true,
+    socketTimeoutMS: 30000,
+    serverSelectionTimeoutMS: 10000,
+})
+    .then(db => {
+        if (db?.connection?.readyState === 1) {
+            app.listen(port, () => { console.log(`Express Server running on port ${port}`); });
+        } else { process.exit(1); }
 
-// your express configuration here
+    })
+    .catch(err => {
+        console.error(err);
+        process.exit(1); // Quit app on mongodb error.
+    });
 
-const httpServer = http.createServer(app);
-// const httpsServer = https.createServer(credentials, app);
-
-httpServer.listen(80, () => {
-    console.log('Server running on port port 80 (http)');
-});
-
-
-// httpsServer.listen(8443);
+// // Middleware
+// app.use('/blacklist', () => {
+//     console.log('This is middleware running');
+// });

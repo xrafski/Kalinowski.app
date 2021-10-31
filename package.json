@@ -1,0 +1,22 @@
+{
+  "name": "kalinowski.app",
+  "version": "1.0.0",
+  "description": "Web Server",
+  "main": "kalinowski.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skillez/Kalinowski.app.git"
+  },
+  "author": "Skillez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Skillez/Kalinowski.app/issues"
+  },
+  "homepage": "https://github.com/Skillez/Kalinowski.app#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

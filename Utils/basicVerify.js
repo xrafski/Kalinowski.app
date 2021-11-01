@@ -1,4 +1,4 @@
-const { userModel } = require('../Schemas/user');
+const { userModel } = require('../Schemas/User');
 const { loginValidation } = require('./validation');
 const bcrypt = require('bcryptjs');
 

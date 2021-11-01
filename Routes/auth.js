@@ -54,8 +54,7 @@ router.post('/login', async (req, res) => {
 
     // Create and assign json web token.
     const token = jwt.sign({ _id: dbUser._id }, jtwSecret);
-    // res.setHeader('Content-Type', 'application/json');
-    res.status(200).header('kali-token', token).send({ message: 'Logged in successfully', token });
+    res.status(200).header('kali-token', token).send({ message: 'Logged in successfully', token, note: 'Do not share this token with anyone!' });
 });
 
 module.exports = router;

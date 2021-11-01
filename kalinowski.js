@@ -3,6 +3,13 @@ const mongoose = require('mongoose');
 const { mongoURI, port } = require('./Settings/secret/info.json'); // Secret file
 
 const app = express();
+
+app.use(
+    express.urlencoded({
+        extended: true
+    })
+);
+
 app.use(express.json());
 
 // Load some info about mongoDB connection

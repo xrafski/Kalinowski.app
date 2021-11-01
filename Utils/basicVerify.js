@@ -20,12 +20,13 @@ module.exports = async function (req, res, next) {
 
     // Check if user exists
     const dbUser = await userModel.findOne({ username, activated: true });
-    if (!dbUser) return res.status(400).send({ error: 'This user is not registered or activated.' });
+    if (!dbUser) return res.status(401).send({ error: 'This user is not registered or activated.' });
 
     // Check if password is correct
     const validPassword = bcrypt.compareSync(password, dbUser.password);
-    if (!validPassword) return res.status(400).json({ error: 'Invalid password.' });
+    if (!validPassword) return res.status(401).json({ error: 'Invalid password.' });
 
+    // Assign userDB doc to req.user
     req.user = dbUser._doc;
     next();
 };

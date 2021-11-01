@@ -13,8 +13,4 @@ router.get('/:guild', basicVerify, async (req, res) => {
     }
 });
 
-router.get('/', basicVerify, async (req, res) => {
-    res.status(404).send({ message: 'Unused route' });
-});
-
 module.exports = router;

@@ -10,6 +10,8 @@ app.use(
     })
 );
 
+// Middlewares
+app.use(express.static('html'));
 app.use(express.json());
 
 // Load some info about mongoDB connection
@@ -32,7 +34,7 @@ mongoose.connect(mongoURI, {
     socketTimeoutMS: 30000,
     serverSelectionTimeoutMS: 10000,
 })
-    .then(db => {
+    .then(db => { // If DB is connected start the app, else exit.
         if (db?.connection?.readyState === 1) {
             app.listen(port, () => { console.log(`Express Server running on port ${port}`); });
         } else { process.exit(1); }

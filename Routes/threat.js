@@ -5,7 +5,7 @@ const basicVerify = require('../Utils/basicVerify');
 router.get('/', basicVerify, async (req, res) => {
 
     try {
-        const list = await threatModel.find().limit(50);
+        const list = await threatModel.find().limit(500);
         res.send(list);
     } catch (error) {
         res.send({ message: error });
@@ -15,8 +15,8 @@ router.get('/', basicVerify, async (req, res) => {
 router.get('/:user', basicVerify, async (req, res) => {
     try {
         const query = { $or: [{ name: { $regex: req.params.user, $options: 'i' } }, { alternates: { $regex: req.params.user, $options: 'i' } }, { discord: { $regex: req.params.user, $options: 'i' } }] };
-        const list = await threatModel.findOne(query);
-        res.json(list);
+        const dbUser = await threatModel.findOne(query);
+        res.json(dbUser);
     } catch (error) {
         res.send({ message: error });
     }

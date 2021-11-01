@@ -17,11 +17,13 @@ require('./Utils/mongodb')(app);
 require('./Utils/process')(app);
 
 // Importing routes
-const blacklistRoute = require('./Routes/blacklist');
+const threatRoute = require('./Routes/threat');
+const certificationRoute = require('./Routes/certification');
 const authRoute = require('./Routes/auth');
 
 app.use('/', authRoute);
-app.use('/blacklist', blacklistRoute);
+app.use('/threat', threatRoute);
+app.use('/certification', certificationRoute);
 
 // Connect to MongoDB and start app
 mongoose.connect(mongoURI, {

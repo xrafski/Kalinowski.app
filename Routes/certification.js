@@ -7,9 +7,9 @@ router.get('/:guild', basicVerify, async (req, res) => {
     try {
         const query = { $or: [{ club: { $regex: req.params.guild, $options: 'i' } }, { 'discord.id': { $regex: req.params.guild, $options: 'i' } }] };
         const dbGuild = await certificationModel.findOne(query);
-        res.json(dbGuild);
+        res.status(200).send(dbGuild);
     } catch (error) {
-        res.send({ message: error });
+        res.status(400).send({ message: error });
     }
 });
 

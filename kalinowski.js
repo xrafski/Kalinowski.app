@@ -4,14 +4,10 @@ const { mongoURI, port } = require('./Settings/secret/info.json'); // Secret fil
 
 const app = express();
 
-app.use(
-    express.urlencoded({
-        extended: true
-    })
-);
 
 // Middlewares
 app.use(express.static('html'));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Load some info about mongoDB connection
@@ -19,13 +15,10 @@ require('./Utils/mongodb')(app);
 require('./Utils/process')(app);
 
 // Importing routes
-const threatRoute = require('./Routes/threat');
-const certificationRoute = require('./Routes/certification');
-const authRoute = require('./Routes/auth');
-
-app.use('/', authRoute);
-app.use('/threat', threatRoute);
-app.use('/certification', certificationRoute);
+app.use('/', require('./Routes/auth'));
+app.use('/threat', require('./Routes/threat'));
+app.use('/certification', require('./Routes/certification'));
+app.use('/mongo', require('./Routes/mongo'));
 
 // Connect to MongoDB and start app
 mongoose.connect(mongoURI, {

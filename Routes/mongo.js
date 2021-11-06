@@ -12,7 +12,7 @@ router.put('/certificate', basicVerify, async (req, res) => {
     getSpreadSheetData(googleSheet.spreadsheet.clubRoster.id, googleSheet.spreadsheet.clubRoster.range, serviceAccount) // Get required data from the spreadsheet.
         .then(gData => {
             formatAndInsertCertificateData(gData) // Format received gData for Mongo.
-                .then(data => res.status(200).send({ message: 'Certificates successfully replaced.', data }))
+                .then(data => res.status(200).send({ message: 'Certificates successfully updated.', data }))
                 .catch(error => res.status(500).send({ message: error.toString() }));
         })
         .catch(error => res.status(500).send({ message: error.toString() }));
@@ -22,7 +22,7 @@ router.put('/threat', basicVerify, async (req, res) => {
     getSpreadSheetData(googleSheet.spreadsheet.threatList.id, googleSheet.spreadsheet.threatList.range, serviceAccount) // Get required data from spreadsheet.
         .then(gData => {
             formatAndInsertThreatData(gData) // Format received gData for Mongo.
-                .then(data => res.status(200).send({ message: 'Threat data successfully replaced.', data }))
+                .then(data => res.status(200).send({ message: 'Threats successfully updated.', data }))
                 .catch(error => res.status(500).send({ message: error.toString() }));
         })
         .catch(error => res.status(500).send({ message: error.toString() }));

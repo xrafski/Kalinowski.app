@@ -1,12 +1,13 @@
-const { userModel } = require('../Schemas/User');
+const { mongoUser } = require('../Models/User');
 const { loginValidation } = require('./validation');
 const bcrypt = require('bcryptjs');
+const logger = require('./logger');
 
 module.exports = async function (req, res, next) {
     // Check for basic auth header
     if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
-        console.warn(`[API] Unauthorized user with missing authorization header tried to use '${req.originalUrl}' route with '${req.method}' method.`);
-        return res.status(401).json({ message: 'Missing Authorization Header' });
+        logger.api(`Utils/basicVerify.js (1) Unauthorized user with missing authorization header tried to use '${req.method}' '${req.originalUrl}'.`);
+        return res.status(401).send({ message: 'Missing Authorization Header' });
     }
 
     // Decode auth credentials
@@ -17,16 +18,16 @@ module.exports = async function (req, res, next) {
     // Validate the data
     const { error } = loginValidation({ username, password });
     if (error) {
-        console.warn(`[API] Unauthorized user '${username}' with invalid authorization header tried to use '${req.originalUrl}' route with '${req.method}' method.`);
+        logger.api(`Utils/basicVerify.js (2) Unauthorized user '${username}' with invalid authorization header tried to use '${req.method}' '${req.originalUrl}'.`);
         return res.status(400).send({ message: error.details[0].message });
     }
 
     // Find username in the database
-    await userModel.findOne({ username, activated: true })
+    await mongoUser.findOne({ username, activated: true })
         .then(dbUser => {
             // Check if user exists
             if (!dbUser) {
-                console.warn(`[API] Unknown unauthorized user '${username}' tried to use '${req.originalUrl}' route with '${req.method}' method.`);
+                logger.api(`Utils/basicVerify.js (3) Not activated user '${username}' tried to use '${req.method}' '${req.originalUrl}'.`);
                 return res.status(401).send({ message: 'This user is not registered or activated.' });
             }
 
@@ -36,16 +37,16 @@ module.exports = async function (req, res, next) {
             // Check if password is correct
             const validPassword = bcrypt.compareSync(password, dbUser.password);
             if (!validPassword) {
-                console.warn(`[API] Unauthorized user '${req.user}' with invalid password tried to use '${req.originalUrl}' route with '${req.method}' method.`);
+                logger.api(`Utils/basicVerify.js (4) User '${req.user}' with invalid password tried to use '${req.method}' '${req.originalUrl}'.`);
                 return res.status(401).json({ message: 'Invalid password.' });
             }
 
-            // Console.info that event out.
-            console.info(`[API] '${req.user}' used '${req.originalUrl}' route with '${req.method}' method.`);
+            // Log that event out.
+            logger.api(`Utils/basicVerify.js (5) '${req.user}' used '${req.method}' '${req.originalUrl}'.`);
             next(); // Go to next route.
         })
         .catch(err => {
-            console.warn(`[API] MongoDB might be unavailable: '${err.message}'`);
+            logger.api('Utils/basicVerify.js (6) MongoDB might be unavailable', err);
             res.status(500).send({ message: 'MongoDB Server seems to be busy. Try again later.' });
         });
 };

@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const threatModel = new Schema({
-    // _id: { type: String, required: true },
+const threatSchema = new Schema({
     name: { type: String, required: true, index: true, unique: true, dropDups: true, },
     warning: { type: String, default: null },
     reason: { type: String, required: true },
@@ -15,10 +14,10 @@ const threatModel = new Schema({
     versionKey: false,
     autoCreate: true, // auto create collection
     autoIndex: true, // auto create indexes
-    collection: 'threat'
+    collection: 'threats'
 });
 
-// define indexes to be create
-// threatModel.index({ id: 1 });
+// define indexes to create
+// threatSchema.index({ name: 1 }, { unique: true, name: 'name_unique' });
 
-module.exports.threatModel = model('threat', threatModel);
+module.exports.mongoThreat = model('threats', threatSchema); // Export Mongo model.

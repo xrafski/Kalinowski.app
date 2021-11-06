@@ -1,6 +1,6 @@
 const express = require('express');
-const { certificationModel } = require('../Schemas/certificationCollection'); // Mongo Certification Model
-const { threatModel } = require('../Schemas/threatCollection'); // Mongo Threat Model
+const { mongoCertificate } = require('../Models/Certificates'); // Mongo Certificates Model
+const { mongoThreat } = require('../Models/Threat'); // Mongo Threats Model
 const router = express.Router(); // Express router
 const basicVerify = require('../Utils/basicVerify'); // Express middleware to auth users
 const { google } = require('googleapis'); // Google API access
@@ -8,24 +8,24 @@ const googleSheet = require('../Settings/google.json'); // Spreadsheet settings 
 const serviceAccount = require('../Settings/secret/trove-ethics-alliance-service-account.json'); // Secret file with google service access
 
 
-router.put('/certification', basicVerify, async (req, res) => { // URL/mongo/certification
+router.put('/certificate', basicVerify, async (req, res) => {
     getSpreadSheetData(googleSheet.spreadsheet.clubRoster.id, googleSheet.spreadsheet.clubRoster.range, serviceAccount) // Get required data from the spreadsheet.
         .then(gData => {
-            formatAndInsertCertificationData(gData) // Format received gData for Mongo.
-                .then(data => res.status(200).send({ message: 'Certification data successfully replaced.', data }))
-                .catch(error => res.status(400).send({ message: error.toString() }));
+            formatAndInsertCertificateData(gData) // Format received gData for Mongo.
+                .then(data => res.status(200).send({ message: 'Certificates successfully replaced.', data }))
+                .catch(error => res.status(500).send({ message: error.toString() }));
         })
-        .catch(error => res.status(400).send({ message: error.toString() }));
+        .catch(error => res.status(500).send({ message: error.toString() }));
 });
 
-router.put('/threat', basicVerify, async (req, res) => { // URL/mongo/threat
+router.put('/threat', basicVerify, async (req, res) => {
     getSpreadSheetData(googleSheet.spreadsheet.threatList.id, googleSheet.spreadsheet.threatList.range, serviceAccount) // Get required data from spreadsheet.
         .then(gData => {
             formatAndInsertThreatData(gData) // Format received gData for Mongo.
                 .then(data => res.status(200).send({ message: 'Threat data successfully replaced.', data }))
-                .catch(error => res.status(400).send({ message: error.toString() }));
+                .catch(error => res.status(500).send({ message: error.toString() }));
         })
-        .catch(error => res.status(400).send({ message: error.toString() }));
+        .catch(error => res.status(500).send({ message: error.toString() }));
 });
 
 /**
@@ -66,13 +66,12 @@ async function getSpreadSheetData(spreadSheetID, spreadSheetRange, keys) {
     });
 }
 
-
 /**
  * Remove rows that have under 3 character length club names, Push remaining data into an array, clear MongoDB collection and repopulate it with a new data.
  * @param {Object} data data received from getSpreadSheetData() fucntion.
  * @returns Either object with results (affectedDocs) or error object.
  */
-function formatAndInsertCertificationData(data) {
+function formatAndInsertCertificateData(data) {
     return new Promise((resolve, reject) => {
         if (!data || typeof data != 'object') return reject(new Error('Data object is either not provided or not a object.')); // Check if variable is provided and not empty.
         const TEA = data.data.values.filter(row => row[0]?.length >= 3); // Filter out rows without requirements: name (3 characters).
@@ -92,16 +91,15 @@ function formatAndInsertCertificationData(data) {
             JSONobj.push({ club, description, world, requirements, representative, discord: { invite, id } }); // Push formatted value to the JSON object.
         });
 
-        certificationModel.deleteMany({}) // Remove all documents from the certification collection.
+        mongoCertificate.deleteMany({}) // Remove all documents from the certificate collection.
             .then(deletedCount => {
-                certificationModel.insertMany(JSONobj) // Insert to the certification collection all data from JSONobj.
+                mongoCertificate.insertMany(JSONobj) // Insert to the certificate collection all data from JSONobj.
                     .then(documents => resolve({ affectedDocs: { deleted: Object.values(deletedCount)[0], inserted: documents.length } }))
                     .catch(err => reject(err));
             })
             .catch(err => reject(err));
     });
 }
-
 
 /**
  * Remove rows that have under 3 character length names, Push remaining data into an array, clear MongoDB collection and repopulate it with a new data.
@@ -130,9 +128,9 @@ function formatAndInsertThreatData(data) {
             JSONobj.push({ name, warning, reason, status, evidence, alternates, discord, notes, personal }); // Push formatted value to the JSON object.
         });
 
-        threatModel.deleteMany({}) // Remove all documents from the certification collection.
+        mongoThreat.deleteMany({}) // Remove all documents from the certificate collection.
             .then(deletedCount => {
-                threatModel.insertMany(JSONobj) // Insert to the certification collection all data from JSONobj.
+                mongoThreat.insertMany(JSONobj) // Insert to the certificate collection all data from JSONobj.
                     .then(documents => resolve({ affectedDocs: { deleted: Object.values(deletedCount)[0], inserted: documents.length } }))
                     .catch(err => reject(err));
             })

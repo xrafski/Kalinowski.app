@@ -1,31 +1,33 @@
 {
-  "name": "kalinowski.app",
-  "version": "1.0.0",
-  "description": "Web Server",
-  "main": "kalinowski.js",
-  "scripts": {
-    "start": "node kalinowski.js",
-    "dev": "nodemon kalinowski.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Skillez/Kalinowski.app.git"
-  },
-  "author": "Skillez",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Skillez/Kalinowski.app/issues"
-  },
-  "homepage": "https://github.com/Skillez/Kalinowski.app#readme",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "express": "^4.17.1",
-    "googleapis": "^89.0.0",
-    "joi": "^17.4.2",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.0.12"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.14"
-  }
+	"name": "kalinowski.app",
+	"version": "1.0.0",
+	"description": "Web Server",
+	"main": "kalinowski.js",
+	"type": "commonjs",
+	"scripts": {
+		"start": "node kalinowski.js",
+		"dev": "nodemon kalinowski.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Skillez/Kalinowski.app.git"
+	},
+	"author": "Skillez",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Skillez/Kalinowski.app/issues"
+	},
+	"homepage": "https://github.com/Skillez/Kalinowski.app#readme",
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"express": "^4.17.1",
+		"googleapis": "^89.0.0",
+		"joi": "^17.4.2",
+		"jsonwebtoken": "^8.5.1",
+		"moment": "^2.29.1",
+		"mongoose": "^6.0.12"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.14"
+	}
 }

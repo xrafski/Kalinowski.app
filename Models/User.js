@@ -11,7 +11,7 @@ const userSchema = new Schema({
     collection: 'users'
 });
 
-// define indexes to be create
-// userModel.index({ id: 1 });
+// define indexes to create
+// userSchema.index({ username: 1 }, { unique: true, name: 'username_unique' });
 
-module.exports.userModel = model('users', userSchema);
+module.exports.mongoUser = model('users', userSchema); // Export Mongo model.

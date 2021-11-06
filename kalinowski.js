@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { mongoURI, port } = require('./Settings/secret/info.json'); // Secret file
+const logger = require('./Utils/logger');
 
 const app = express();
 
@@ -16,7 +17,7 @@ require('./Utils/process')(app);
 // Importing routes
 app.use('/', require('./Routes/auth'));
 app.use('/threat', require('./Routes/threat'));
-app.use('/certification', require('./Routes/certification'));
+app.use('/certificate', require('./Routes/certificate'));
 app.use('/mongo', require('./Routes/mongo'));
 
 // Invalid route handler.
@@ -54,11 +55,11 @@ mongoose.connect(mongoURI, {
 })
     .then(db => { // If DB is connected start the app, else exit.
         if (db?.connection?.readyState === 1) {
-            app.listen(port, () => { console.info(`[APP] Express Server running on port ${port}`); });
+            app.listen(port, () => logger.startup(`kalinowski.js (1) Express Server running on port '${port}'.`));
         } else { process.exit(1); }
 
     })
     .catch(err => {
-        console.warn(`[APP] MongoDB Error: ${err.message}`);
+        logger.mongo('kalinowski.js (2) Error on startup', err);
         process.exit(1); // Quit app on mongodb error.
     });

@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
+const logger = require('./logger');
 
 module.exports = () => {
 	process.on('unhandledRejection', (error) => {
-		console.trace('[kalinowski] Unhandled promise rejection:', error);
+		logger.trace('[kalinowski] Unhandled promise rejection:', error);
 	});
 
 	process.on('SIGINT', () => {
-		console.log('[kalinowski] Database disconnecting on app termination.');
+		logger.log('[kalinowski] Database disconnecting on app termination.');
 		if (mongoose.connection.readyState === 1) {
 			mongoose.connection.close(() => {
 				process.exit(0);
@@ -15,6 +16,6 @@ module.exports = () => {
 	});
 
 	process.on('exit', (code) => {
-		console.warn(`[kalinowski] About to exit with code: ${code}`);
+		logger.log('[kalinowski] About to exit with code', code);
 	});
 };

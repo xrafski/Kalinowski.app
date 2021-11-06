@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-module.exports = async () => {
+module.exports = () => {
 	process.on('unhandledRejection', (error) => {
-		console.warn('[kalinowski] Unhandled promise rejection:', error);
+		console.trace('[kalinowski] Unhandled promise rejection:', error);
 	});
 
 	process.on('SIGINT', () => {

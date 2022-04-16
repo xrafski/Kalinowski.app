@@ -13,12 +13,14 @@ app.use(express.json());
 // Load some info about mongoDB connection
 require('./Utils/mongodb')(app);
 require('./Utils/process')(app);
+// require('./Cron/Remove-old-codes')(app);
 
 // Importing routes
 app.use('/', require('./Routes/auth'));
 app.use('/threat', require('./Routes/threat'));
 app.use('/certificate', require('./Routes/certificate'));
 app.use('/mongo', require('./Routes/mongo'));
+app.use('/code', require('./Routes/code'));
 
 // Invalid route handler.
 app.all('*', (req, res, next) => {

@@ -1,2 +1,2 @@
 # Kalinowski.app
-Code for web page on Express and NodeJS
+Source code for my webpage and API
